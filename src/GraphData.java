@@ -12,7 +12,7 @@ class GraphData {
     private ArrayList<ArrayList<Integer>> routes;
     private DirectedEdge[][] adj;
 
-    GraphData(HashMap<String, Double> W, ArrayList<String> edgeTitles,
+    GraphData(HashMap<String, Integer> W, ArrayList<String> edgeTitles,
               String month, String day, String hour) {
         G = new AdjMatrixEdgeWeightedDigraph(60);
         coord = new int[60][2];
@@ -20,7 +20,7 @@ class GraphData {
         inputData();
         routes = new ArrayList<>();
 
-        setLearnedWeights(W, edgeTitles, month, day, hour);
+        setLearnedWeights(W, edgeTitles);
 
         FW = new FloydWarshall(G); // needed to createRoute
         createRoutes();
@@ -109,16 +109,16 @@ class GraphData {
     ArrayList<ArrayList<Integer>> getRoutes(){ return routes; }
 
 
-    private void setLearnedWeights(HashMap<String, Double> W, ArrayList<String> edgeTitles,
-                                   String mes, String dia, String hora){
+    private void setLearnedWeights(HashMap<String, Integer> W, ArrayList<String> edgeTitles){
 
         for(String et : edgeTitles){
             String[] nodes = et.split(" ");
             int n1 = Integer.parseInt(nodes[0]);
             int n2 = Integer.parseInt(nodes[1]);
-            String key = mes + " " + dia + " " + hora + " " + n1 + " " + n2;
+            String key = n1 + " " + n2;
 
-            doubleEdge(n1, n2, W.get(key).intValue());
+            System.out.println(W);
+            doubleEdge(n1, n2, W.get(key));
         }
     }
 

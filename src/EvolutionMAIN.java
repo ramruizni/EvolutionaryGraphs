@@ -13,7 +13,7 @@ public class EvolutionMAIN {
     private static ArrayList<ArrayList<Integer>> routes, routes2;
     private static Random rand;
 
-    private static HashMap<String, Double> W;
+    private static HashMap<String, Integer> W;
     private static ArrayList<String> edgeTitles;
 
     public static void main (String [] args){
@@ -21,12 +21,12 @@ public class EvolutionMAIN {
         rand = new Random();
 
         int cases = 10;
-        DBcreator.createFakeDB(cases);
+        W = DBcreator.createFakeWeights();
         DBlearner DBL = new DBlearner();
         DBL.resetW();
         DBL.learnFromDB(cases);
 
-        W = DBL.getLearnedW();
+        //W = DBL.getLearnedW();
         edgeTitles = DBL.getEdgeTitles();
 
         GD = new GraphData(W, edgeTitles, "9", "5", "11");
