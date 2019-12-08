@@ -1,33 +1,30 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import data.structures.AdjMatrixEdgeWeightedDigraph;
+import data.structures.DirectedEdge;
+import data.structures.FloydWarshall;
+import utils.FileUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 class GraphData {
+    AdjMatrixEdgeWeightedDigraph G = new AdjMatrixEdgeWeightedDigraph(60);
+    HashMap<String, Integer> weights;
+    int[][] coords;
+    FloydWarshall FW;
+    ArrayList<ArrayList<Integer>> routes = new ArrayList<>();
 
-    private AdjMatrixEdgeWeightedDigraph G;
-    private int[][] coord;
-    private FloydWarshall FW;
-    private ArrayList<ArrayList<Integer>> routes;
-    private DirectedEdge[][] adj;
+    GraphData() {
+        coords = FileUtils.readVertexCoords();
+        weights = FileUtils.readWeights();
 
-    GraphData(HashMap<String, Integer> W, ArrayList<String> edgeTitles,
-              String month, String day, String hour) {
-        G = new AdjMatrixEdgeWeightedDigraph(60);
-        coord = new int[60][2];
-        adj = G.getAdj();
-        inputData();
-        routes = new ArrayList<>();
-
-        setLearnedWeights(W, edgeTitles);
+        addWeightedEdgesToGraph();
 
         FW = new FloydWarshall(G); // needed to createRoute
         createRoutes();
         // now we can access the routes
     }
 
-    private void createRoutes(){
+    private void createRoutes() {
         routes.add(createRoute(0, 40)); // MAGENTA
         routes.add(createRoute(5, 45)); // GREEN
         routes.add(createRoute(44, 47));//CYAN
@@ -37,7 +34,7 @@ class GraphData {
         createCustomRoutes(routes); // BLACK & YELLOW
     }
 
-    private ArrayList<Integer> createRoute(int start, int end){
+    private ArrayList<Integer> createRoute(int start, int end) {
         ArrayList<Integer> r = new ArrayList<>();
         if (FW.hasPath(end, start)) {
             for (DirectedEdge e : FW.path(end, start)) {
@@ -48,7 +45,7 @@ class GraphData {
         return r;
     }
 
-    private void createCustomRoutes(ArrayList<ArrayList<Integer>> routes){
+    private void createCustomRoutes(ArrayList<ArrayList<Integer>> routes) {
         ArrayList<Integer> r7 = new ArrayList<>();
         r7.addAll(createRoute(16, 18));
         ArrayList<Integer> aux = createRoute(18, 29);
@@ -70,58 +67,14 @@ class GraphData {
         routes.add(r8);
     }
 
-    private void inputData(){
-        BufferedReader br = null;
-        FileReader fr = null;
-        try {
-            fr = new FileReader("vertexCoordinates");
-            br = new BufferedReader(fr);
-
-            String sCurrentLine;
-            while ((sCurrentLine = br.readLine()) != null) {
-                String[] line = sCurrentLine.split(" ");
-                coord[Integer.parseInt(line[0])][0] = Integer.parseInt(line[1]);
-                coord[Integer.parseInt(line[0])][1] = Integer.parseInt(line[2]);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (br != null)
-                    br.close();
-                if (fr != null)
-                    fr.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-    }
-
-    private void doubleEdge(int a, int b, int w){
-        G.addEdge(new DirectedEdge(a, b, w));
-        G.addEdge(new DirectedEdge(b, a, w));
-    }
-
-    AdjMatrixEdgeWeightedDigraph getG(){ return G; }
-    int[][] getCoord(){ return coord; }
-    ArrayList<ArrayList<Integer>> getRoutes(){ return routes; }
-
-
-    private void setLearnedWeights(HashMap<String, Integer> W, ArrayList<String> edgeTitles){
-
-        for(String et : edgeTitles){
-            String[] nodes = et.split(" ");
+    private void addWeightedEdgesToGraph() {
+        for (String key : weights.keySet()) {
+            String[] nodes = key.split(" ");
             int n1 = Integer.parseInt(nodes[0]);
             int n2 = Integer.parseInt(nodes[1]);
-            String key = n1 + " " + n2;
 
-            System.out.println(W);
-            doubleEdge(n1, n2, W.get(key));
+            G.addEdge(new DirectedEdge(n1, n2, weights.get(key)));
+            G.addEdge(new DirectedEdge(n2, n1, weights.get(key)));
         }
     }
-
-
-
 }
