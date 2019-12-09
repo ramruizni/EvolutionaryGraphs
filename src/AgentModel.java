@@ -9,7 +9,7 @@ public class AgentModel {
     Random random = new Random();
 
     public void createAgentList(int amount) {
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < amount; i++) {
             int startNode = random.nextInt(53) + 1;
             int endNode = startNode;
             while (endNode == startNode) {

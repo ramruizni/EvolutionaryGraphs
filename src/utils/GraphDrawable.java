@@ -110,6 +110,7 @@ public class GraphDrawable extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
         frame.setSize(800, 600);
+        frame.setLocation(400, 0);
         frame.setVisible(true);
     }
 }
