@@ -7,6 +7,13 @@ public class DirectedEdge {
 
     public double getWeight(){ return weight; }
 
+    public int getStart() {
+        return v;
+    }
+
+    public int getEnd() {
+        return w;
+    }
 
     /**
      * Initializes a directed edge from vertex {@code v} to vertex {@code w} with

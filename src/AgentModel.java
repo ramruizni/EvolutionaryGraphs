@@ -1,3 +1,5 @@
+import data.structures.DirectedEdge;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -6,8 +8,8 @@ public class AgentModel {
     List<Agent> agentList = new ArrayList<>();
     Random random = new Random();
 
-    public void createAgentList() {
-        for (int i = 0; i < 1000; i++) {
+    public void createAgentList(int amount) {
+        for (int i = 0; i < 1000000; i++) {
             int startNode = random.nextInt(53) + 1;
             int endNode = startNode;
             while (endNode == startNode) {
@@ -20,7 +22,20 @@ public class AgentModel {
     public long calculateTravelTimes(GraphData GD) {
         long duration = 0;
         for (Agent agent : agentList) {
-            duration += GD.FW.dist(agent.startNode, agent.endNode);
+            //System.out.println("Start: " + agent.startNode + ", End: " + agent.endNode);
+            Iterable<DirectedEdge> path = GD.FW.path(agent.startNode, agent.endNode);
+            long travelDuration = 0;
+            for (DirectedEdge edge : path) {
+                boolean [] routes = GD.edgeRoutes.get(edge.getStart() + " " + edge.getEnd());
+                if (GD.edgeHasRoute.get(edge.getStart() + " " + edge.getEnd())) {
+                    travelDuration += 5;
+                    //System.out.println("adding " + 5 + " for edge: " + edge);
+                } else {
+                    travelDuration += edge.weight();
+                    //System.out.println("adding " + edge.weight() + " for edge: " + edge);
+                }
+            }
+            duration += travelDuration;
         }
         return duration;
     }

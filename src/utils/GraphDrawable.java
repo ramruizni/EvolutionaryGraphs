@@ -106,8 +106,7 @@ public class GraphDrawable extends JPanel {
         return null;
     }
 
-    public void drawWithTitle(String title) {
-        JFrame frame = new JFrame(title);
+    public void drawNewFrame(JFrame frame) {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
         frame.setSize(800, 600);
