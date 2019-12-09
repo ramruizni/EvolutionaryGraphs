@@ -70,13 +70,13 @@ public class GraphDrawable extends JPanel {
         }
     }
 
-    private void drawRoute(Graphics g, int i, ArrayList<ArrayList<Integer>> rouuutes) {
+    private void drawRoute(Graphics g, int i, ArrayList<ArrayList<Integer>> routes) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(4));
         g2.setColor(chooseColor(i));
 
-        ArrayList<Integer> r = rouuutes.get(i);
+        ArrayList<Integer> r = routes.get(i);
         int p = 0;
         for (int n = 1; n < r.size(); n++) {
             g2.draw(new Line2D.Float(coords[r.get(p)][0], coords[r.get(p)][1], coords[r.get(n)][0], coords[r.get(n)][1]));

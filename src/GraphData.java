@@ -5,6 +5,7 @@ import utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 class GraphData {
     AdjMatrixEdgeWeightedDigraph G = new AdjMatrixEdgeWeightedDigraph(60);
@@ -12,16 +13,17 @@ class GraphData {
     int[][] coords;
     FloydWarshall FW;
     ArrayList<ArrayList<Integer>> routes = new ArrayList<>();
+    List<Integer> terminalNodes;
 
     GraphData() {
         coords = FileUtils.readVertexCoords();
         weights = FileUtils.readWeights();
+        terminalNodes = FileUtils.readTerminalNodes();
 
         addWeightedEdgesToGraph();
 
         FW = new FloydWarshall(G); // needed to createRoute
         createRoutes();
-        // now we can access the routes
     }
 
     private void createRoutes() {
@@ -46,15 +48,13 @@ class GraphData {
     }
 
     private void createCustomRoutes(ArrayList<ArrayList<Integer>> routes) {
-        ArrayList<Integer> r7 = new ArrayList<>();
-        r7.addAll(createRoute(16, 18));
+        ArrayList<Integer> r7 = new ArrayList<>(createRoute(16, 18));
         ArrayList<Integer> aux = createRoute(18, 29);
         aux.remove(0);
         r7.addAll(aux);
         routes.add(r7);
 
-        ArrayList<Integer> r8 = new ArrayList<>();
-        r8.addAll(createRoute(1, 10));
+        ArrayList<Integer> r8 = new ArrayList<>(createRoute(1, 10));
         aux = createRoute(10, 37);
         aux.remove(0);
         r8.addAll(aux);
