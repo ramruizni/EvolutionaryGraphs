@@ -1,4 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import data.structures.AdjMatrixEdgeWeightedDigraph;
 import data.structures.DirectedEdge;
 import data.structures.FloydWarshall;
@@ -15,10 +14,9 @@ class GraphData {
     int[][] coords = FileUtils.readVertexCoords();
     FloydWarshall FW;
     ArrayList<ArrayList<Integer>> routes;
-    List<Integer> terminalNodes  = FileUtils.readTerminalNodes();
+    List<Integer> terminalNodes = FileUtils.readTerminalNodes();
 
-    HashMap<String, boolean[]> edgeRoutes = new HashMap<>();
-    HashMap<String, Boolean> edgeHasRoute = new HashMap<>();
+    HashMap<String, Integer> edgeHasRoute = new HashMap<>();
 
     GraphData() {
         addWeightedEdgesToGraph();
@@ -30,7 +28,7 @@ class GraphData {
         routes = new ArrayList<>();
         int i = 0;
         while (i < 16) {
-            routes.add(createRoute(terminalNodes.get(i), terminalNodes.get(i + 1), i/2));
+            routes.add(createRoute(terminalNodes.get(i), terminalNodes.get(i + 1), i / 2));
             i += 2;
         }
     }
@@ -44,14 +42,12 @@ class GraphData {
         }
         route.add(end);
 
-        for (int i = 0; i < route.size()-1; i++) {
+        for (int i = 0; i < route.size() - 1; i++) {
             String key = route.get(i) + " " + route.get(i + 1);
             String keyReversed = route.get(i + 1) + " " + route.get(i);
-            //edgeRoutes.get(key)[index] = true;
-            //edgeRoutes.get(keyReversed)[index] = true;
 
-            edgeHasRoute.put(key, true);
-            edgeHasRoute.put(keyReversed, true);
+            edgeHasRoute.put(key, index);
+            edgeHasRoute.put(keyReversed, index);
         }
         return route;
     }
@@ -68,11 +64,9 @@ class GraphData {
             String keyReversed = n2 + " " + n1;
 
             if (!edgeHasRoute.containsKey(key)) {
-                //edgeRoutes.put(key, new boolean[8]);
-                //edgeRoutes.put(keyReversed, new boolean[8]);
 
-                edgeHasRoute.put(key, false);
-                edgeHasRoute.put(keyReversed, false);
+                edgeHasRoute.put(key, -1);
+                edgeHasRoute.put(keyReversed, -1);
             }
         }
     }

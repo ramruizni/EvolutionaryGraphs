@@ -3,8 +3,10 @@ import utils.GraphDrawable;
 import javax.swing.*;
 
 public class RoutingAgents {
-    static final int NUM_OF_ITERATIONS = 100;
-    static final int NUM_OF_AGENTS = 1000000;
+    static final int NUM_OF_AGENTS = 1000000;            // NA
+    static final int NUM_OF_ITERATIONS = 100;            // NI
+    static final int MINUTES_WAITING_NEW_BUS = 4;        // ME
+    static final int MINUTES_IN_ROUTE_WITHOUT_STOPS = 5; // MR
 
     static JFrame frame;
     static JFrame textFrame;
@@ -22,12 +24,16 @@ public class RoutingAgents {
         textFrame.add(textArea);
         textFrame.setSize(400, 600);
         textFrame.setVisible(true);
-
-        initModel();
+        try {
+            initModel();
+        } catch (Exception e) {
+            textArea.append(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public static void initModel() {
-        agentModel = new AgentModel();
+        agentModel = new AgentModel(MINUTES_WAITING_NEW_BUS, MINUTES_IN_ROUTE_WITHOUT_STOPS);
         agentModel.createAgentList(NUM_OF_AGENTS);
 
         long min = Long.MAX_VALUE;
@@ -38,7 +44,8 @@ public class RoutingAgents {
             if (newTime < min) {
                 min = newTime;
                 System.out.println("Better route distribution - Iteration: " + i + " - Time: " + min);
-                textArea.append("\nBetter route distribution - Iteration: " + i + " - Time: " + min);
+                textArea.append("\n\nBetter route distribution - Iteration: " + i + " - Time: " + min);
+                textArea.append("\n        Wait time average: " + agentModel.waitingTimeAvg);
                 new GraphDrawable(GD.G, GD.coords, GD.routes).drawNewFrame(frame);
             }
         }
