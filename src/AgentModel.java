@@ -9,9 +9,9 @@ public class AgentModel {
     List<Agent> agentList = new ArrayList<>();
     Random random = new Random();
     int numberOfAgents;
-    int waitingTimeAvg = 0;
-    int minutesWaitingNewBus;
-    int minutesInRouteWithoutStop;
+    Double waitingTimeAvg;
+    Integer minutesWaitingNewBus;
+    Integer minutesInRouteWithoutStop;
 
     AgentModel(int minutesWaitingNewBus, int minutesInRouteWithoutStop) {
         if (minutesInRouteWithoutStop < 1 || minutesInRouteWithoutStop > 8) {
@@ -34,6 +34,7 @@ public class AgentModel {
     }
 
     public long calculateTravelTimes(GraphData GD) {
+        waitingTimeAvg = 0.0;
         long duration = 0;
         for (Agent agent : agentList) {
             //System.out.println("Start: " + agent.startNode + ", End: " + agent.endNode);
@@ -43,16 +44,21 @@ public class AgentModel {
             for (DirectedEdge edge : path) {
                 if (GD.edgeHasRoute.get(edge.getStart() + " " + edge.getEnd()) != -1) {
                     travelDuration += minutesInRouteWithoutStop; // journey is faster if the user is in a route
-                    if (!inRoute) waitingTimeAvg += minutesWaitingNewBus / numberOfAgents; // if it had to wait, we increase the sum
+                    if (!inRoute) {
+                        waitingTimeAvg += minutesWaitingNewBus; // if it had to wait, we increase the sum
+                    }
                     inRoute = true;
                 } else {
-                    if (inRoute) waitingTimeAvg += minutesWaitingNewBus / numberOfAgents;
+                    if (inRoute) {
+                        waitingTimeAvg += minutesWaitingNewBus;
+                    }
                     travelDuration += edge.weight();
                     inRoute = false;
                 }
             }
             duration += travelDuration;
         }
+        waitingTimeAvg /= numberOfAgents;
         return duration;
     }
 }

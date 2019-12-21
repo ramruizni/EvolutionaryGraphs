@@ -3,10 +3,10 @@ import utils.GraphDrawable;
 import javax.swing.*;
 
 public class RoutingAgents {
-    static final int NUM_OF_AGENTS = 1000000;            // NA
-    static final int NUM_OF_ITERATIONS = 100;            // NI
+    static final int NUM_OF_AGENTS = 1000;            // NA
+    static final int NUM_OF_ITERATIONS = 10000;            // NI
     static final int MINUTES_WAITING_NEW_BUS = 4;        // ME
-    static final int MINUTES_IN_ROUTE_WITHOUT_STOPS = 5; // MR
+    static final int MINUTES_IN_ROUTE_WITHOUT_STOPS = 8; // MR
 
     static JFrame frame;
     static JFrame textFrame;
@@ -22,7 +22,7 @@ public class RoutingAgents {
 
         textArea = new JTextArea();
         textFrame.add(textArea);
-        textFrame.setSize(400, 600);
+        textFrame.setSize(400, 1200);
         textFrame.setVisible(true);
         try {
             initModel();
@@ -51,6 +51,9 @@ public class RoutingAgents {
         }
         textArea.append("\n\nAfter " + NUM_OF_ITERATIONS + " iterations, these are the best routes found.");
         System.out.println("After " + NUM_OF_ITERATIONS + " iterations, these are the best routes found.");
+
+        textArea.append("\n");
+
         frame.setTitle("Routes after iteration: " + NUM_OF_ITERATIONS + " - COMPLETED");
     }
 }
